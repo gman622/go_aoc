@@ -75,33 +75,37 @@ func main() {
 	fmt.Printf("Compressed space: %d × %d\n", len(xCoords), len(yCoords))
 	fmt.Printf("Compression ratio: %.1f:1\n", float64((maxX-minX+1)*(maxY-minY+1))/float64(len(xCoords)*len(yCoords)))
 
-	// Image dimensions
-	panelWidth := 600
-	panelHeight := 600
+	// Image dimensions - make left panel much larger to show scale difference
+	leftPanelWidth := 1000
+	leftPanelHeight := 1000
+	rightPanelWidth := 250  // Much smaller to show compression!
+	rightPanelHeight := 250
 	padding := 50
-	gap := 100
-	totalWidth := panelWidth*2 + gap
-	totalHeight := panelHeight + 2*padding
+	gap := 80
+	totalWidth := leftPanelWidth + gap + rightPanelWidth + 2*padding
+	totalHeight := max(leftPanelHeight, rightPanelHeight) + 2*padding
 
 	// Create image
 	img := image.NewRGBA(image.Rect(0, 0, totalWidth, totalHeight))
 	draw.Draw(img, img.Bounds(), &image.Uniform{color.RGBA{250, 250, 250, 255}}, image.Point{}, draw.Src)
 
 	// Draw left panel (original space)
-	drawOriginalSpace(img, tiles, minX, maxX, minY, maxY, padding, padding, panelWidth, panelHeight)
+	drawOriginalSpace(img, tiles, minX, maxX, minY, maxY, padding, padding, leftPanelWidth, leftPanelHeight)
 
-	// Draw right panel (compressed space)
+	// Draw right panel (compressed space) - positioned to align with top of left panel
+	rightPanelX := padding + leftPanelWidth + gap
+	rightPanelY := padding + (leftPanelHeight-rightPanelHeight)/2 // Center vertically
 	drawCompressedSpace(img, tiles, xToCompressed, yToCompressed, len(xCoords), len(yCoords),
-		padding+panelWidth+gap, padding, panelWidth, panelHeight)
+		rightPanelX, rightPanelY, rightPanelWidth, rightPanelHeight)
 
 	// Add titles
-	drawTitle(img, "Original Space", padding+panelWidth/2, padding-30)
+	drawTitle(img, "Original Space", padding+leftPanelWidth/2, padding-30)
 	drawTitle(img, fmt.Sprintf("%d × %d = %.1fB cells", maxX-minX+1, maxY-minY+1,
-		float64((maxX-minX+1)*(maxY-minY+1))/1e9), padding+panelWidth/2, padding-10)
+		float64((maxX-minX+1)*(maxY-minY+1))/1e9), padding+leftPanelWidth/2, padding-10)
 
-	drawTitle(img, "Compressed Space", padding+panelWidth+gap+panelWidth/2, padding-30)
+	drawTitle(img, "Compressed Space", rightPanelX+rightPanelWidth/2, rightPanelY-30)
 	drawTitle(img, fmt.Sprintf("%d × %d = %dK cells", len(xCoords), len(yCoords),
-		len(xCoords)*len(yCoords)/1000), padding+panelWidth+gap+panelWidth/2, padding-10)
+		len(xCoords)*len(yCoords)/1000), rightPanelX+rightPanelWidth/2, rightPanelY-10)
 
 	// Save image
 	outFile, err := os.Create("aoc/day9/day9_compression.png")

@@ -218,8 +218,10 @@ The key insight: 496 red tiles only use 248 unique X coordinates and 247 unique 
 
 ![Coordinate Compression Comparison](day9_compression.png)
 
-**Left**: Original sparse space (97K × 97K = 9.4B cells) - notice the light grid showing vast empty regions
-**Right**: Compressed dense space (248 × 247 = 61K cells) - every coordinate is actually used
+**Left (large)**: Original sparse space (97K × 97K = 9.4B cells) - notice the light grid showing vast empty regions
+**Right (tiny)**: Compressed dense space (248 × 247 = 61K cells) - every coordinate is actually used
+
+**The size difference is the point!** The visual scale represents the actual data compression - from a massive sparse grid to a tiny dense grid.
 
 **Compression ratio**: ~153,000:1
 
