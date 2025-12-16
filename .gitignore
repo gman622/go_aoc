@@ -1,0 +1,16 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+aoc-runner
+
+# Test binary
+*.test
+
+# Output
+*.out
+
+# Go workspace file
+go.work
