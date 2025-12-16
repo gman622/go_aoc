@@ -214,17 +214,22 @@ Using two red tiles as opposite corners, what is the largest area of any rectang
 
 The key insight: 496 red tiles only use 248 unique X coordinates and 247 unique Y coordinates. Compress coordinates and pre-fill the entire polygon interior in compressed space.
 
-### Coordinate Compression Visualization
+### Coordinate Compression Explained
 
-![Coordinate Compression Comparison](day9_compression.png)
+![Coordinate Compression Concept](day9_compression_concept.png)
 
-**Left (large)**: Original sparse space (97K × 97K = 9.4B cells) - notice the light grid showing vast empty regions
-**Right (tiny)**: Compressed dense space (248 × 247 = 61K cells) - every coordinate is actually used
+**How it works:**
+- **Top axis (red)**: Original sparse coordinates with huge gaps between values
+- **Bottom axis (green)**: Compressed to sequential indices (0, 1, 2, ...) with no gaps
+- **Dotted arrows**: Show how original coordinates map to compressed indices
 
-**The size difference is the point!** The visual scale represents the actual data compression - from a massive sparse grid to a tiny dense grid.
+**Key insight**: The 496 tiles use only 248 unique X values spanning 1,607 to 98,389. Instead of allocating space for all 97K coordinates, we:
+1. Extract the 248 unique X values and sort them
+2. Map each original X to its index in the sorted list (0-247)
+3. Repeat for Y coordinates (247 unique values → indices 0-246)
 
-**Compression ratio**: ~153,000:1
+**Result**: 97K × 97K sparse space → 248 × 247 dense grid = **~153,000:1 compression**
 
-The topology is preserved (same polygon shape), but the metric distances are lost. Since we only need to know if points are inside/outside the polygon (topology), not their actual distances (metric), compression works perfectly!
+The compressed space has a different shape (distances change), but point-in-polygon tests work because we test compressed coordinates against the compressed polygon consistently!
 
 Both parts complete! ⭐⭐
