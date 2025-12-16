@@ -5,6 +5,7 @@
 *.so
 *.dylib
 aoc-runner
+main
 
 # Test binary
 *.test
@@ -14,3 +15,6 @@ aoc-runner
 
 # Go workspace file
 go.work
+
+# Input files (stored locally only)
+inputs/
